@@ -14,7 +14,10 @@ import android.widget.CheckedTextView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Toast;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -57,6 +60,35 @@ public class GroceryListActivity extends Activity {
     			tvNewItem.setText("");
     		}
         });
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	getMenuInflater().inflate(R.menu.main, menu);
+    	return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	boolean ret = false;
+    	int id = item.getItemId();
+    	switch (id) {
+	    	case R.id.checkout:
+	    		delete_checked_items(getApplicationContext());
+	    		ret = true;
+	    		break;
+	    	case R.id.clear:
+	    		delete_all_items(getApplicationContext());
+	    		ret = true;
+	    		break;
+	    	case R.id.settings:
+	    		Toast.makeText(getApplicationContext(), "Not yet implemented", Toast.LENGTH_SHORT).show();
+	    		ret = true;
+	    		break;
+    		default:
+    			ret = super.onOptionsItemSelected(item);
+    	}
+    	return ret;
     }
     
     

@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Grocery List</string>
+    <string name="checkout">Checkout</string>
+    <string name="clear">Clear</string>
+    <string name="settings">Settings</string>
 </resources>

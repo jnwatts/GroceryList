@@ -90,7 +90,7 @@ public class GroceryProvider extends ContentProvider {
 		long rowId = 0;
 		switch (sURLMatcher.match(uri)) {
 			case ITEMS: {
-				count = db.delete(DATABASE_NAME, selection, selectionArgs);
+				count = db.delete(DATABASE_TABLE, selection, selectionArgs);
 				break;
 			}
 			case ITEMS_ID: {

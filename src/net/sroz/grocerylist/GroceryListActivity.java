@@ -127,6 +127,14 @@ public class GroceryListActivity extends Activity {
 		Uri uri = ContentUris.withAppendedId(GroceryProvider.CONTENT_URI, id);
 		c.getContentResolver().delete(uri, null, null);
 	}
+	
+	public static void delete_all_items(Context c) {
+		c.getContentResolver().delete(GroceryProvider.CONTENT_URI, null, null);
+	}
+	
+	public static void delete_checked_items(Context c) {
+		c.getContentResolver().delete(GroceryProvider.CONTENT_URI, GroceryProvider.KEY_CHECKED + "=?", new String[] {Integer.toString(1)});
+	}
 
 	public static void toggle_item(Context c, int id, boolean isChecked) {
 		ContentValues values = new ContentValues(1);

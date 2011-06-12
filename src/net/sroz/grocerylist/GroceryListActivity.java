@@ -51,15 +51,14 @@ public class GroceryListActivity extends Activity {
         
         //lvItems.setOnItemLongClickListener(mShowItemOptions);
 
-        btnAddItem.setOnClickListener(mAddListener);
+        btnAddItem.setOnClickListener(new OnClickListener() {
+    		public void onClick(View v) {
+    			GroceryListActivity.add_item(getApplicationContext(), tvNewItem.getText().toString());
+    			tvNewItem.setText("");
+    		}
+        });
     }
     
-    private OnClickListener mAddListener = new OnClickListener()
-    {
-		public void onClick(View v) {
-			GroceryListActivity.add_item(getApplicationContext(), tvNewItem.getText().toString());
-		}
-    };
     
 	private class GroceryListAdapter extends CursorAdapter {
 

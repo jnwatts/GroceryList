@@ -86,7 +86,7 @@ public class GroceryProvider extends ContentProvider {
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		SQLiteDatabase db = DBHelper.getWritableDatabase();
-		int count; 
+		int count = 0;
 		long rowId = 0;
 		switch (sURLMatcher.match(uri)) {
 			case ITEMS: {

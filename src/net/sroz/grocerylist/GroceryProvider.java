@@ -60,16 +60,6 @@ public class GroceryProvider extends ContentProvider {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			db.execSQL(DATABASE_CREATE);
-			ContentValues values;
-			values = new ContentValues();
-			Boolean b = false;
-			
-			for (int i = 1; i <= 10; i++) {
-				values.put(KEY_TEXT, "Item #" + Integer.toString(i));
-				values.put(KEY_CHECKED, b);
-				db.insert(DATABASE_TABLE, null, values);
-				b = !b;
-			}
 		}
 		
 		@Override

@@ -69,6 +69,15 @@ public class GroceryListActivity extends Activity {
     }
     
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+    	boolean haveItems = (GroceryListActivity.get_item_count(getApplicationContext()) > 0);
+		menu.findItem(R.id.checkout).setEnabled(haveItems);
+		menu.findItem(R.id.clear).setEnabled(haveItems);
+    	menu.findItem(R.id.settings).setEnabled(false);
+    	return true;
+    }
+    
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	boolean ret = false;
     	int id = item.getItemId();

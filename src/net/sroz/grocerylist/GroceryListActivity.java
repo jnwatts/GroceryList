@@ -9,6 +9,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.CursorAdapter;
@@ -20,7 +23,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 
 
@@ -51,9 +53,22 @@ public class GroceryListActivity extends Activity {
         mCursor = getContentResolver().query(GroceryProvider.CONTENT_URI, GroceryProvider.ITEM_QUERY_COLUMNS, null, null, GroceryProvider.DEFAULT_SORT_ORDER);
         
         lvItems.setAdapter(new GroceryListAdapter(this, mCursor));
+    	lvItems.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				CheckedTextView cv = (CheckedTextView) view;
+				boolean isChecked = !cv.isChecked();
+				GroceryListActivity.toggle_item(getApplicationContext(), id, isChecked);
+			}
+		});
+    	lvItems.setOnItemLongClickListener(new OnItemLongClickListener() {
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				/* TODO Show context menu on long click */
+				GroceryListActivity.delete_item(getApplicationContext(), id);
+				return false;
+			}
+    	});
         
-        //lvItems.setOnItemLongClickListener(mShowItemOptions);
-
+    	/* TODO Figure out default-handler for text so we don't explicitly need btnAddItem */
         btnAddItem.setOnClickListener(new OnClickListener() {
     		public void onClick(View v) {
     			GroceryListActivity.add_item(getApplicationContext(), tvNewItem.getText().toString());
@@ -102,45 +117,21 @@ public class GroceryListActivity extends Activity {
     
     
 	private class GroceryListAdapter extends CursorAdapter {
-
 		public GroceryListAdapter(Context context, Cursor c) {
 			super(context, c);
 		}
 
 		@Override
-		public void bindView(View view, Context context, Cursor cursor) {
-			final GroceryItem item = new GroceryItem(cursor);
-			CheckedTextView text1 = (CheckedTextView) view.findViewById(android.R.id.text1);
-			text1.setText(item.text);
-			text1.setChecked(item.checked);
-			
-			text1.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					boolean isChecked = !((CheckedTextView)v).isChecked();
-					GroceryListActivity.toggle_item(getApplicationContext(), item.id, isChecked);
-				}
-			});
-			
-			
-			text1.setLongClickable(true);
-			text1.setOnLongClickListener(new OnLongClickListener() {
-				public boolean onLongClick(View v) {
-					/* XXX Show context menu on long click */
-					GroceryListActivity.delete_item(getApplicationContext(), item.id);
-					return false;
-				}
-			});
+		public View newView(Context context, Cursor cursor, ViewGroup parent) {
+			return mFactory.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
 		}
 
 		@Override
-		public View newView(Context context, Cursor cursor, ViewGroup parent) {
-			View ret = mFactory.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
-			/* XXX Do we want to initialize empty/default values?
-			CheckedTextView text1 = (CheckedTextView) ret.findViewById(android.R.id.text1);
-			text1.setText(cursor.getString(cursor.getColumnIndex(GroceryProvider.KEY_ITEM)));
-			text1.setChecked((cursor.getInt(cursor.getColumnIndex(GroceryProvider.KEY_CHECKED)) == 1));
-			*/
-			return ret;
+		public void bindView(View view, Context context, Cursor cursor) {
+			final GroceryItem item = new GroceryItem(cursor);
+			CheckedTextView cv = (CheckedTextView) view;
+			cv.setText(item.text);
+			cv.setChecked(item.checked);
 		}
 	}
 	

@@ -19,7 +19,6 @@ import android.widget.ListView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -72,7 +71,6 @@ public class GroceryListActivity extends Activity {
 			}
     	});
         
-    	/* TODO Figure out default-handler for text so we don't explicitly need btnAddItem */
         btnAddItem.setOnClickListener(new OnClickListener() {
     		public void onClick(View v) {
     			GroceryListActivity.add_item(getApplicationContext(), tvNewItem.getText().toString());
@@ -82,7 +80,6 @@ public class GroceryListActivity extends Activity {
         
         tvNewItem.setOnKeyListener(new OnKeyListener() {
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				Log.w("GROCERY", "Got key: "+keyCode);
 				if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
 					// XXX This should be moved to it's own method in the Activity
 	    			GroceryListActivity.add_item(getApplicationContext(), tvNewItem.getText().toString());

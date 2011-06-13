@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
@@ -153,14 +152,33 @@ public class GroceryProvider extends ContentProvider {
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,	String[] selectionArgs, String sortOrder) {
-		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		qb.setTables(DATABASE_TABLE);
 		SQLiteDatabase db = DBHelper.getReadableDatabase();
-		Cursor ret = qb.query(db, projection, selection, selectionArgs, null, null, sortOrder);
-		if (ret != null) {
-			ret.setNotificationUri(getContext().getContentResolver(), uri);
+		long rowId = 0;
+		String segment = "";
+		Cursor cursor = null;
+		switch (sURLMatcher.match(uri)) {
+			case ITEMS:
+				// Nothing to add, query is over all items
+				break;
+			case ITEMS_ID:
+				// Query is on a specific item
+				segment = uri.getPathSegments().get(1);
+				rowId = Long.parseLong(segment);
+				if (TextUtils.isEmpty(selection)) {
+					selection = KEY_ROWID + "=" + rowId;
+				} else {
+					// And include whatever selection the caller gave
+					selection = KEY_ROWID + "=" + rowId + " AND (" + selection + ")";
+				}
+				break;
+			default:
+				throw new IllegalArgumentException("Cannot delete from URI: " + uri);
 		}
-		return ret;
+		cursor = db.query(DATABASE_TABLE, projection, selection, selectionArgs, null, null, null);
+		if (cursor != null) {
+			cursor.setNotificationUri(getContext().getContentResolver(), uri);
+		}
+		return cursor;
 	}
 
 	@Override

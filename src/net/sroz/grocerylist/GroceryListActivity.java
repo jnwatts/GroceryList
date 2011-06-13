@@ -18,6 +18,7 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -178,6 +179,13 @@ public class GroceryListActivity extends Activity {
 	}
 
 	public static void add_item(Context c, String text) {
+		if (TextUtils.isEmpty(text))
+			return;
+		GroceryItem item = find_item(c, text);
+		if (item != null) {
+			Toast.makeText(c, "Item already in list", Toast.LENGTH_SHORT).show();
+			return;
+		}
 		ContentValues values = new ContentValues(1);
 		values.put(GroceryProvider.KEY_TEXT, text);
 		c.getContentResolver().insert(GroceryProvider.CONTENT_URI, values);	

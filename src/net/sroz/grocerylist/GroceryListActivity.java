@@ -183,6 +183,19 @@ public class GroceryListActivity extends Activity {
 		c.getContentResolver().insert(GroceryProvider.CONTENT_URI, values);	
 	}
 
+	private static GroceryItem find_item(Context c, String text) {
+		GroceryItem item = null;
+		Cursor cursor = null;
+		cursor = c.getContentResolver().query(GroceryProvider.CONTENT_URI, GroceryProvider.ITEM_QUERY_COLUMNS, GroceryProvider.KEY_TEXT+"=?", new String[] {text}, null);
+		if (cursor != null) {
+			if (cursor.moveToFirst()) {
+				cursor.moveToFirst();
+				item = new GroceryItem(cursor);
+			}
+		}
+		return item;
+	}
+
 	public static void delete_item(Context c, long id) {
 		Uri uri = ContentUris.withAppendedId(GroceryProvider.CONTENT_URI, id);
 		c.getContentResolver().delete(uri, null, null);

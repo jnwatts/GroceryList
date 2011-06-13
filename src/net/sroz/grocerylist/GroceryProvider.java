@@ -71,6 +71,7 @@ public class GroceryProvider extends ContentProvider {
 	}
 	
 	public GroceryProvider() {
+		// Nothing to do
 	}
 	
 	@Override
@@ -78,25 +79,27 @@ public class GroceryProvider extends ContentProvider {
 		SQLiteDatabase db = DBHelper.getWritableDatabase();
 		int count = 0;
 		long rowId = 0;
+		String segment = "";
+		Cursor cursor = null;
 		switch (sURLMatcher.match(uri)) {
-			case ITEMS: {
+			case ITEMS:
+				// Delete whatever the caller has selected
 				count = db.delete(DATABASE_TABLE, selection, selectionArgs);
 				break;
-			}
-			case ITEMS_ID: {
-				String segment = uri.getPathSegments().get(1);
+			case ITEMS_ID:
+				// Delete a specific ID
+				segment = uri.getPathSegments().get(1);
 				rowId = Long.parseLong(segment);
 				if (TextUtils.isEmpty(selection)) {
 					selection = KEY_ROWID + "=" + rowId;
 				} else {
+					// And include whatever selection the caller gave
 					selection = KEY_ROWID + "=" + rowId + " AND (" + selection + ")";
 				}
 				count = db.delete(DATABASE_TABLE, selection, selectionArgs);
 				break;
-			}
-			default: {
+			default:
 				throw new IllegalArgumentException("Cannot delete from URI: " + uri);
-			}
 		}
 		
 		getContext().getContentResolver().notifyChange(uri, null);
@@ -105,8 +108,7 @@ public class GroceryProvider extends ContentProvider {
 
 	@Override
 	public String getType(Uri uri) {
-		int match = sURLMatcher.match(uri);
-		switch (match) {
+		switch (sURLMatcher.match(uri)) {
 			case ITEMS:
 				return "vnd.sroz.cursor.dir/items";
 			case ITEMS_ID:
@@ -118,21 +120,21 @@ public class GroceryProvider extends ContentProvider {
 
 	@Override
 	public Uri insert(Uri uri, ContentValues initialValues) {
-		if (sURLMatcher.match(uri) != ITEMS) {
+		if (sURLMatcher.match(uri) != ITEMS)
 			throw new IllegalArgumentException("Cannot insert into URI: " + uri);
-		}
 		
 		ContentValues values;
-		if (initialValues != null)
+		if (initialValues != null) {
 			values = new ContentValues(initialValues);
-		else
+		} else {
 			values = new ContentValues();
+		}
 		
 		if (!values.containsKey(KEY_TEXT))
 			throw new IllegalArgumentException("Missing required key: KEY_ITEM");
 		
 		if (!values.containsKey(KEY_CHECKED))
-			values.put(KEY_CHECKED, false);
+			values.put(KEY_CHECKED, false); // New items are created unchecked
 		
 		SQLiteDatabase db = DBHelper.getWritableDatabase();
 		long rowId = db.insert(DATABASE_TABLE, null, values);
@@ -150,8 +152,7 @@ public class GroceryProvider extends ContentProvider {
 	}
 
 	@Override
-	public Cursor query(Uri uri, String[] projection, String selection,
-			String[] selectionArgs, String sortOrder) {
+	public Cursor query(Uri uri, String[] projection, String selection,	String[] selectionArgs, String sortOrder) {
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 		qb.setTables(DATABASE_TABLE);
 		SQLiteDatabase db = DBHelper.getReadableDatabase();
@@ -163,22 +164,20 @@ public class GroceryProvider extends ContentProvider {
 	}
 
 	@Override
-	public int update(Uri uri, ContentValues values, String selection,
-			String[] selectionArgs) {
+	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 		int count;
 		long rowId = 0;
 		int match = sURLMatcher.match(uri);
+		String segment = "";
 		SQLiteDatabase db = DBHelper.getWritableDatabase();
 		switch (match) {
-			case ITEMS_ID: {
-				String segment = uri.getPathSegments().get(1);
+			case ITEMS_ID:
+				segment = uri.getPathSegments().get(1);
 				rowId = Long.parseLong(segment);
-				count = db.update(DATABASE_TABLE, values, KEY_ROWID + "=" + rowId, null);
+				count = db.update(DATABASE_TABLE, values, KEY_ROWID + "=?", new String[] {Long.toString(rowId)});
 				break;
-			}
-			default: {
+			default:
 				throw new UnsupportedOperationException("Cannot update URI: " + uri);
-			}
 		}
 		getContext().getContentResolver().notifyChange(uri, null);
 		return count;

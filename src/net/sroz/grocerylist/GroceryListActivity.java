@@ -18,11 +18,14 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 
 
@@ -75,6 +78,19 @@ public class GroceryListActivity extends Activity {
     			tvNewItem.setText("");
     		}
         });
+        
+        tvNewItem.setOnKeyListener(new OnKeyListener() {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				Log.w("GROCERY", "Got key: "+keyCode);
+				if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
+					// XXX This should be moved to it's own method in the Activity
+	    			GroceryListActivity.add_item(getApplicationContext(), tvNewItem.getText().toString());
+	    			tvNewItem.setText("");
+					return true;
+				}
+				return false;
+			}
+		});
     }
     
     @Override

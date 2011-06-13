@@ -135,7 +135,7 @@ public class GroceryListActivity extends Activity {
 		}
 	}
 	
-	private static GroceryItem getItem(ContentResolver resolver, int id) {
+	public static GroceryItem get_item(ContentResolver resolver, long id) {
 		Uri uri = ContentUris.withAppendedId(GroceryProvider.CONTENT_URI, id);
 		Cursor c = resolver.query(uri, GroceryProvider.ITEM_QUERY_COLUMNS, null, null, null);
 		GroceryItem item = null;
@@ -154,7 +154,7 @@ public class GroceryListActivity extends Activity {
 		c.getContentResolver().insert(GroceryProvider.CONTENT_URI, values);	
 	}
 
-	public static void delete_item(Context c, int id) {
+	public static void delete_item(Context c, long id) {
 		Uri uri = ContentUris.withAppendedId(GroceryProvider.CONTENT_URI, id);
 		c.getContentResolver().delete(uri, null, null);
 	}
@@ -167,7 +167,7 @@ public class GroceryListActivity extends Activity {
 		c.getContentResolver().delete(GroceryProvider.CONTENT_URI, GroceryProvider.KEY_CHECKED + "=?", new String[] {Integer.toString(1)});
 	}
 
-	public static void toggle_item(Context c, int id, boolean isChecked) {
+	public static void toggle_item(Context c, long id, boolean isChecked) {
 		ContentValues values = new ContentValues(1);
 		values.put(GroceryProvider.KEY_CHECKED, isChecked ? 1 : 0);
 		

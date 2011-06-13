@@ -79,7 +79,6 @@ public class GroceryProvider extends ContentProvider {
 		int count = 0;
 		long rowId = 0;
 		String segment = "";
-		Cursor cursor = null;
 		switch (sURLMatcher.match(uri)) {
 			case ITEMS:
 				// Delete whatever the caller has selected

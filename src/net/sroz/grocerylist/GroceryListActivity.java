@@ -147,6 +147,19 @@ public class GroceryListActivity extends Activity {
 		}
 		return item;
 	}
+	
+    public static int get_item_count(Context c) {
+		Cursor cursor = null;
+		int count = 0;
+		cursor = c.getContentResolver().query(GroceryProvider.CONTENT_URI, new String[] {"COUNT(_ID) as count"}, null, null, null);
+		if (cursor != null) {
+			if (cursor.moveToFirst()) {
+				cursor.moveToFirst();
+				count = cursor.getInt(cursor.getColumnIndex("count"));
+			}
+		}
+		return count; 
+	}
 
 	public static void add_item(Context c, String text) {
 		ContentValues values = new ContentValues(1);

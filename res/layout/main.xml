@@ -5,10 +5,10 @@
     android:layout_height="fill_parent"
     >
     <LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:layout_width="match_parent">
-        <AutoCompleteTextView android:layout_weight="1" android:layout_height="wrap_content" android:id="@+id/tvNewItem" android:layout_width="match_parent" android:hint="Enter new item here...">
+        <AutoCompleteTextView android:layout_weight="1" android:layout_height="wrap_content" android:id="@+id/tvNewItem" android:layout_width="match_parent" android:inputType="text|textAutoComplete" android:imeActionId="@+id/btnAddItem" android:hint="@string/enter_new_item_here" android:imeActionLabel="@string/add">
             <requestFocus></requestFocus>
         </AutoCompleteTextView>
-        <Button android:id="@+id/btnAddItem" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="Add"></Button>
+        <Button android:id="@+id/btnAddItem" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/add"></Button>
     </LinearLayout>
 <ListView android:layout_width="match_parent" android:id="@+id/lvItems" android:layout_height="fill_parent"></ListView>
 </LinearLayout>

@@ -67,7 +67,7 @@ public class GroceryListActivity extends Activity {
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				/* TODO Show context menu on long click */
 				GroceryListActivity.delete_item(getApplicationContext(), id);
-				return false;
+				return true;
 			}
     	});
         

@@ -38,9 +38,9 @@ public class GroceryProvider extends ContentProvider {
 	
 	private static final String DATABASE_CREATE =
 		"create table tblGroceries ("
-		+ "_id integer primary key autoincrement, "
-		+ "Item text not null, "
-		+ "Checked integer not null"
+		+ KEY_ROWID + " integer primary key autoincrement, "
+		+ KEY_TEXT + " text not null, "
+		+ KEY_CHECKED + " integer not null, "
 		+ ");";
 	
 	private DatabaseHelper DBHelper;

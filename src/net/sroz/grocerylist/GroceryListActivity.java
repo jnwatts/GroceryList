@@ -36,12 +36,6 @@ public class GroceryListActivity extends Activity {
 	LayoutInflater mFactory;
 	Cursor mCursor;
 	
-	static String[] stock_items = new String[] {
-		"One",
-		"Two",
-		"Three"
-	};
-	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {

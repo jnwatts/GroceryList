@@ -1,4 +1,4 @@
-package net.sroz.grocerylist;
+package net.sroz.grocerylist2;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -21,7 +21,7 @@ public class GroceryProvider extends ContentProvider {
 	public static final String KEY_TEXT = "Item";
 	public static final String KEY_CHECKED = "Checked";
 	public static final Uri CONTENT_URI =
-        Uri.parse("content://net.sroz.grocerylist/item");
+        Uri.parse("content://net.sroz.grocerylist2/item");
 	static final String[] ITEM_QUERY_COLUMNS = {
 		KEY_ROWID,
 		KEY_TEXT,
@@ -47,8 +47,8 @@ public class GroceryProvider extends ContentProvider {
 	private static final UriMatcher sURLMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 	
 	static {
-		sURLMatcher.addURI("net.sroz.grocerylist", "item", ITEMS);
-		sURLMatcher.addURI("net.sroz.grocerylist", "item/#", ITEMS_ID);
+		sURLMatcher.addURI("net.sroz.grocerylist2", "item", ITEMS);
+		sURLMatcher.addURI("net.sroz.grocerylist2", "item/#", ITEMS_ID);
 	}
 	
 	private static class DatabaseHelper extends SQLiteOpenHelper {

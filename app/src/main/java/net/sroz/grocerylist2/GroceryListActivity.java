@@ -1,6 +1,6 @@
-package net.sroz.grocerylist;
+package net.sroz.grocerylist2;
 
-import net.sroz.grocerylist.R;
+import net.sroz.grocerylist2.R;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;

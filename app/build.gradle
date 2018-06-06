@@ -5,7 +5,7 @@ android {
     buildToolsVersion "27.0.3"
 
     defaultConfig {
-        applicationId "net.sroz.grocerylist"
+        applicationId "net.sroz.grocerylist2"
         minSdkVersion 10
         targetSdkVersion 26
         compileOptions {

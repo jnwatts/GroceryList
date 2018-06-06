@@ -1,4 +1,4 @@
-package net.sroz.grocerylist;
+package net.sroz.grocerylist2;
 
 import android.database.Cursor;
 

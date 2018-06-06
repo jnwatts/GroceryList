@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       android:versionCode="2"
-      android:versionName="1.1" package="net.sroz.grocerylist" android:installLocation="preferExternal">
+      android:versionName="1.1" package="net.sroz.grocerylist2" android:installLocation="preferExternal">
 
     <application android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name="net.sroz.grocerylist.GroceryListActivity"
+        <activity android:name="net.sroz.grocerylist2.GroceryListActivity"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <provider android:name="net.sroz.grocerylist.GroceryProvider" android:authorities="net.sroz.grocerylist" android:exported="false" />
+        <provider android:name="net.sroz.grocerylist2.GroceryProvider" android:authorities="net.sroz.grocerylist2" android:exported="false" />
 
     </application>
 </manifest>

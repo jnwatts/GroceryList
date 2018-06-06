@@ -11,7 +11,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <provider android:name="net.sroz.grocerylist.GroceryProvider" android:authorities="net.sroz.grocerylist"></provider>
+        <provider android:name="net.sroz.grocerylist.GroceryProvider" android:authorities="net.sroz.grocerylist" android:exported="false" />
 
     </application>
 </manifest>

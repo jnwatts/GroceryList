@@ -40,7 +40,7 @@ public class GroceryProvider extends ContentProvider {
 		"create table tblGroceries ("
 		+ KEY_ROWID + " integer primary key autoincrement, "
 		+ KEY_TEXT + " text not null, "
-		+ KEY_CHECKED + " integer not null, "
+		+ KEY_CHECKED + " integer not null"
 		+ ");";
 	
 	private DatabaseHelper DBHelper;

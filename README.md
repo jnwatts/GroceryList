@@ -6,4 +6,4 @@ When I got my first Android device I was dismayed that I couldn't find truely si
 This application *just* stores a single list of items and allows you to check them off. You can remove individual items, all checked items, or completely empty the list. That's *ALL*. Enjoy! :-)
 
 * [Play Store](https://play.google.com/store/apps/details?id=net.sroz.grocerylist2)
-* F-Droid -- TODO
+* F-Droid -- [TODO](https://f-droid.org/en/docs/Submitting_to_F-Droid_Quick_Start_Guide/)

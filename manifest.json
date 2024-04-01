@@ -1,0 +1,29 @@
+{
+    "name": "Grocery List",
+    "description": "An intentionally simple grocery list",
+    "short_name": "GL",
+    "start_url": "/",
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "favicon.ico",
+            "sizes": "320x320",
+            "type": "image/png"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/images/screenshot_wide.png",
+            "type": "image/png",
+            "sizes": "320x320",
+            "form_factor": "wide"
+        },
+        {
+            "src": "/images/screenshot_narrow.png",
+            "type": "image/png",
+            "sizes": "320x320",
+            "form_factor": "narrow"
+        }
+
+    ]
+}

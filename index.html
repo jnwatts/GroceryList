@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />
+    <title>Grocery List</title>
+    <script>
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register('/sw.js').catch((error) => {
+            console.warn('Reg failure', error);
+        });
+    });
+    </script>
+    <style>
+        body {
+            font-family: "Gill Sans", sans-serif;
+        }
+
+        #lists {
+            font-size: 1.5em;
+        }
+
+        button, input {
+            font-size: 1.2em;
+        }
+
+        #entries {
+            list-style-type: none;
+            padding-inline-start: 0;
+        }
+
+        .entry {
+            font-size: 1.2em;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+
+        .entry input[type="checkbox"] {
+            /* Double-sized Checkboxes */
+            -ms-transform: scale(1.2); /* IE */
+            -moz-transform: scale(1.2); /* FF */
+            -webkit-transform: scale(1.2); /* Safari and Chrome */
+            -o-transform: scale(1.2); /* Opera */
+            transform: scale(1.2);
+            margin-right: 0.5em;
+        }
+    </style>
+</head>
+<body>
+<p>
+    <select id="lists">
+    </select>
+    <button id="lists-new">New</button>
+    <button id="lists-rename">Rename</button>
+    <button id="lists-delete">Delete</button>
+</p>
+
+<p>
+    <button id="lists-checkout">Checkout</button>
+    <button id="lists-clear">Clear</button>
+</p>
+
+<p id="p-input">
+    <input type="text" id="input">
+    <button id="input-add">Add</button>
+    <button id="input-clear">Clear</button>
+</p>
+
+<ul id="entries">
+</ul>
+
+<script type="module" src="/grocerylist.js"></script>
+</body>
+</html>

@@ -25,6 +25,7 @@ class GroceryList {
         document.getElementById('lists').addEventListener('change', (e) => this.listChanged(e));
         document.getElementById('lists-checkout').addEventListener('click', (e) => this.listCheckout(e));
         document.getElementById('lists-clear').addEventListener('click', (e) => this.listClear(e));
+        document.getElementById('lists-export').addEventListener('click', (e) => this.listExport(e));
 
         document.getElementById('input-add').addEventListener('click', (e) => this.inputAddClick(e));
         document.getElementById('input').addEventListener('keyup', (e) => this.inputKeyup(e));
@@ -54,6 +55,11 @@ class GroceryList {
         this.data.lists[last_list].entries = [];
         this.save();
         this.renderEntries();
+    }
+
+    listExport(e) {
+        const last_list = this.data.last_list;
+        navigator.clipboard.writeText(JSON.stringify(this.data.lists[last_list]));
     }
 
     renderLists() {

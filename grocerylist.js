@@ -7,18 +7,8 @@ class GroceryList {
         val = window.localStorage.getItem('grocerylist-config');
         this.config = val ? JSON.parse(val) : {};
         val = window.localStorage.getItem('grocerylist-data');
-        this.data = val ? JSON.parse(val) : {
-            'lists': [
-                {'id': 0, 'name': 'Groceries', 'next_id': 2, 'entries': [
-                    {'id': 0, 'value': 'Beer', 'checked': true},
-                    {'id': 1, 'value': 'More beer', 'checked': false}
-                ]},
-                {'id': 1, 'name': 'TODO', 'next_id': 0, 'entries': [
-                ]}
-            ],
-            'last_list': 0,
-            'next_id': 2
-        }
+        this.data = val ? JSON.parse(val) : this.defaultData();
+        this.upgradeData();
         this.renderLists();
         this.renderEntries();
 
@@ -35,6 +25,31 @@ class GroceryList {
     save() {
         window.localStorage.setItem('grocerylist-config', JSON.stringify(this.config));
         window.localStorage.setItem('grocerylist-data', JSON.stringify(this.data));
+    }
+
+    defaultData() {
+        return {
+            'v': 2,
+            'lists': {
+                '0': {'id': 0, 'name': 'Groceries', 'next_id': 2, 'entries': [
+                    {'id': 0, 'value': 'Beer', 'checked': true},
+                    {'id': 1, 'value': 'More beer', 'checked': false}
+                ]},
+                '1': {'id': 1, 'name': 'TODO', 'next_id': 0, 'entries': [
+                ]}
+            },
+            'last_list': 0,
+            'next_id': 2
+        };
+    }
+
+    upgradeData() {
+        var v = ('v' in this.data ? this.data.v : 1);
+        if (v == 1) {
+            this.data.v = 2;
+            this.data.lists = this.data.lists.reduce((lists,l) => (lists[l.id] = l,lists), {});
+        }
+        this.save();
     }
 
     async textRequest(user_args) {
@@ -109,7 +124,7 @@ class GroceryList {
 
     renderLists() {
         const last_list = this.data.last_list;
-        var lists = this.data.lists.map((l) => {
+        var lists = Object.values(this.data.lists).map((l) => {
             return `<option value='${l.id}' ${(l.id == last_list) ? 'selected' : ''}>${l.name}</option>`
         });
         document.getElementById('lists').innerHTML = lists.join('\n');
@@ -158,7 +173,7 @@ class GroceryList {
 
     renderEntries() {
         const last_list = this.data.last_list;
-        var entries = this.data.lists[last_list]?.entries?.map((e) => {
+        var entries = this.data.lists[last_list].entries.map((e) => {
             return `<li class="entry"><label><input type="checkbox" data-id="${e.id}" ${e.checked ? 'checked' : ''}>${e.value}</label> </li>`;
         });
         document.getElementById('entries').innerHTML = entries?.join('\n') || 'This list is empty';

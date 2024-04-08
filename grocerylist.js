@@ -16,6 +16,10 @@ class GroceryList {
         document.getElementById('lists-checkout').addEventListener('click', (e) => this.listCheckout(e));
         document.getElementById('lists-clear').addEventListener('click', (e) => this.listClear(e));
         document.getElementById('lists-export').addEventListener('click', (e) => this.listExport(e));
+        document.getElementById('lists-import').addEventListener('click', (e) => this.listImport(e));
+        document.getElementById('lists-new').addEventListener('click', (e) => this.listNew(e));
+        document.getElementById('lists-rename').addEventListener('click', (e) => this.listRename(e));
+        document.getElementById('lists-delete').addEventListener('click', (e) => this.listDelete(e));
 
         document.getElementById('input-add').addEventListener('click', (e) => this.inputAddClick(e));
         document.getElementById('input').addEventListener('keyup', (e) => this.inputKeyup(e));
@@ -97,6 +101,13 @@ class GroceryList {
         return result;
     }
 
+    listSet(id) {
+        this.data.last_list = parseInt(id);
+        var lists = document.getElementById('lists');
+        lists.value = this.data.last_list;
+        this.renderEntries();
+    }
+
     listChanged(e) {
         this.data.last_list = parseInt(e.target.value);
         this.save();
@@ -120,6 +131,74 @@ class GroceryList {
     listExport(e) {
         const last_list = this.data.last_list;
         navigator.clipboard.writeText(JSON.stringify(this.data.lists[last_list]));
+    }
+
+    async listImport(e) {
+        const response = await this.textRequest({"request": "Import list", "hint": "Paste json data here"})
+        var list;
+        try {
+            list = JSON.parse(response);
+        } catch {
+            return;
+        }
+        console.log(list);
+        if (list.id in this.data.lists) {
+            delete this.data.lists[list.id];
+        }
+        this.data.lists[list.id] = list;
+        this.renderLists();
+        this.listSet(list.id);
+    }
+
+    async listNew(e) {
+        const response = await this.textRequest({
+            "request": "New list",
+            "hint": "Name of list"
+        });
+        if (!response) {
+            return;
+        }
+        var lists = Object.values(this.data.lists).map((l) => l.name);
+        if (response in lists) {
+            return;
+        }
+        var list_id = this.data.next_id++;
+        this.data.lists[list_id] = {
+            "id": list_id,
+            "name": response,
+            "next_id": 0,
+            "entries": [],
+        };
+        this.renderLists();
+        this.listSet(list_id);
+        this.save();
+    }
+
+    async listRename(e) {
+        const response = await this.textRequest({
+            "request": "New list",
+            "default": this.data.lists[this.data.last_list].name,
+        });
+        if (!response) {
+            return;
+        }
+        var lists = Object.values(this.data.lists).map((l) => l.name);
+        if (response in lists) {
+            return;
+        }
+        this.data.lists[this.data.last_list].name = response;
+        this.renderLists();
+        this.save();
+    }
+
+    async listDelete(e) {
+        if (Object.keys(this.data.lists).length <= 1) {
+            return;
+        }
+        delete this.data.lists[this.data.last_list];
+        this.renderLists();
+        this.listSet(Object.keys(this.data.lists));
+        this.save();
     }
 
     renderLists() {

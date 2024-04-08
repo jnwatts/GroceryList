@@ -37,6 +37,51 @@ class GroceryList {
         window.localStorage.setItem('grocerylist-data', JSON.stringify(this.data));
     }
 
+    async textRequest(user_args) {
+        const default_args = {
+            "ok": true,
+            "cancel": true,
+            "request": "Request",
+            "hint": undefined,
+            "default": undefined,
+        };
+        const args = {...default_args, ...user_args};
+        const popup_template = document.getElementById('popup-text');
+        var popup = popup_template.content.cloneNode(true);
+        var response = popup.querySelector('#popup-response');
+        if (args.hint) {
+            response.setAttribute('placeholder', args.hint);
+        }
+        if (args.default) {
+            response.value = args.default;
+        }
+        var ok = popup.querySelector('#popup-ok');
+        if (!args.ok) {
+            ok.parentNode.removeChild(ok);
+        }
+        var cancel = popup.querySelector('#popup-cancel');
+        if (!args.cancel) {
+            cancel.parentNode.removeChild(cancel);
+        }
+        var request = popup.querySelector('#popup-request');
+        if (args.request) {
+            request.innerText = args.request;
+        }
+        document.body.appendChild(popup);
+        var result = await new Promise((resolve) => {
+            ok.addEventListener('click', (e) => resolve(response.value));
+            cancel.addEventListener('click', (e) => resolve(undefined));
+            response.addEventListener('keyup', (e) => {
+                if (e.keyCode === 27) {
+                    e.preventDefault();
+                    resolve(undefined);
+                }
+            })
+        });
+        document.body.removeChild(document.getElementById('popup'));
+        return result;
+    }
+
     listChanged(e) {
         this.data.last_list = parseInt(e.target.value);
         this.save();

@@ -45,6 +45,15 @@
             transform: scale(1.2);
             margin-right: 0.5em;
         }
+
+        #popup {
+            position: absolute;
+            top: 5em;
+            left: 5em;
+            background: white;
+            border: 2px solid black;
+            padding: 1em;
+        }
     </style>
 </head>
 <body>
@@ -70,6 +79,15 @@
 
 <ul id="entries">
 </ul>
+
+<template id="popup-text">
+    <div id="popup">
+        <label><span id="popup-request">Request</span><br>
+            <textarea id="popup-response"></textarea>
+        </label><br>
+        <button id="popup-ok">Ok</button><button id="popup-cancel">Cancel</button>
+    </div>
+</template>
 
 <script type="module" src="/grocerylist.js"></script>
 </body>

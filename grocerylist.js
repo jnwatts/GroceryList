@@ -9,9 +9,14 @@ class GroceryList {
         val = window.localStorage.getItem('grocerylist-data');
         this.data = val ? JSON.parse(val) : this.defaultData();
         this.upgradeData();
+
+        this.updateLightMode();
         this.renderLists();
         this.renderEntries();
 
+        document.getElementById('light-mode').checked = !!this.data?.light_mode;
+        document.getElementById('light-mode').addEventListener('change', (e) => this.lightMode(e));
+        document.getElementById('nuke').addEventListener('click', (e) => this.nuke());
         document.getElementById('lists').addEventListener('change', (e) => this.listChanged(e));
         document.getElementById('lists-checkout').addEventListener('click', (e) => this.listCheckout(e));
         document.getElementById('lists-clear').addEventListener('click', (e) => this.listClear(e));
@@ -33,27 +38,43 @@ class GroceryList {
 
     defaultData() {
         return {
-            'v': 2,
-            'lists': {
-                '0': {'id': 0, 'name': 'Groceries', 'next_id': 2, 'entries': [
-                    {'id': 0, 'value': 'Beer', 'checked': true},
-                    {'id': 1, 'value': 'More beer', 'checked': false}
+            'lists': [
+                {'name': 'Groceries', 'next_id': 2, 'entries': [
+                    {'value': 'Beer', 'checked': true},
+                    {'value': 'More beer', 'checked': false}
                 ]},
-                '1': {'id': 1, 'name': 'TODO', 'next_id': 0, 'entries': [
-                ]}
-            },
+                {'name': 'TODO', 'next_id': 0, 'entries': []}
+            ],
             'last_list': 0,
-            'next_id': 2
         };
     }
 
-    upgradeData() {
-        var v = ('v' in this.data ? this.data.v : 1);
-        if (v == 1) {
-            this.data.v = 2;
-            this.data.lists = this.data.lists.reduce((lists,l) => (lists[l.id] = l,lists), {});
-        }
+    nuke() {
+        this.data = this.defaultData();
+        this.renderLists();
+        this.renderEntries();
         this.save();
+    }
+
+    upgradeData() {
+        var old_v = ('v' in this.data ? this.data.v : 1);
+        var new_v = 1;
+
+// this.data = this.defaultData();
+
+        if (old_v != new_v) {
+            this.save();
+        }
+    }
+
+    lightMode(e) {
+        this.data.light_mode = !!e.target.checked;
+        this.updateLightMode();
+        this.save();
+    }
+
+    updateLightMode(e) {
+        document.body.setAttribute('data-theme', (this.data?.light_mode ? 'light' : 'dark'));
     }
 
     async textRequest(user_args) {
@@ -108,6 +129,22 @@ class GroceryList {
         this.renderEntries();
     }
 
+    listGet() {
+        return this.data.lists[this.data.last_list];
+    }
+
+    listAdd(list) {
+        this.listDeleteByName(list.name);
+        this.data.lists.push(list);
+        this.renderLists();
+        this.listSet(this.listGetByName(list.name));
+        this.save();
+    }
+
+    listGetByName(name) {
+        return this.data.lists.find((l) => l.name == name);
+    }
+
     listChanged(e) {
         this.data.last_list = parseInt(e.target.value);
         this.save();
@@ -129,8 +166,7 @@ class GroceryList {
     }
 
     listExport(e) {
-        const last_list = this.data.last_list;
-        navigator.clipboard.writeText(JSON.stringify(this.data.lists[last_list]));
+        navigator.clipboard.writeText(JSON.stringify(this.listGet()));
     }
 
     async listImport(e) {
@@ -141,13 +177,8 @@ class GroceryList {
         } catch {
             return;
         }
-        console.log(list);
-        if (list.id in this.data.lists) {
-            delete this.data.lists[list.id];
-        }
-        this.data.lists[list.id] = list;
-        this.renderLists();
-        this.listSet(list.id);
+
+        this.listAdd(list);
     }
 
     async listNew(e) {
@@ -158,55 +189,55 @@ class GroceryList {
         if (!response) {
             return;
         }
-        var lists = Object.values(this.data.lists).map((l) => l.name);
-        if (response in lists) {
-            return;
-        }
-        var list_id = this.data.next_id++;
-        this.data.lists[list_id] = {
-            "id": list_id,
+        this.listAdd({
             "name": response,
-            "next_id": 0,
             "entries": [],
-        };
-        this.renderLists();
-        this.listSet(list_id);
-        this.save();
+        });
     }
 
     async listRename(e) {
+        var list = this.listGet();
         const response = await this.textRequest({
             "request": "New list",
-            "default": this.data.lists[this.data.last_list].name,
+            "default": list.name,
         });
         if (!response) {
             return;
         }
-        var lists = Object.values(this.data.lists).map((l) => l.name);
-        if (response in lists) {
+        if (response == list.name) {
             return;
         }
-        this.data.lists[this.data.last_list].name = response;
+        if (this.listGetByName(response) != undefined) {
+            return;
+        }
+        list.name = response;
         this.renderLists();
         this.save();
     }
 
-    async listDelete(e) {
-        if (Object.keys(this.data.lists).length <= 1) {
+    listDelete(e) {
+        if (this.data.lists.length <= 1) {
             return;
         }
         delete this.data.lists[this.data.last_list];
         this.renderLists();
-        this.listSet(Object.keys(this.data.lists));
+        this.listSet(0);
         this.save();
+    }
+
+    listDeleteByName(name) {
+        this.data.lists.map((l,i) => {
+            if (l.name == name) {
+                delete this.data.lists[i];
+            }
+        });
     }
 
     renderLists() {
         const last_list = this.data.last_list;
-        var lists = Object.values(this.data.lists).map((l) => {
-            return `<option value='${l.id}' ${(l.id == last_list) ? 'selected' : ''}>${l.name}</option>`
-        });
-        document.getElementById('lists').innerHTML = lists.join('\n');
+        document.getElementById('lists').innerHTML = this.data.lists.map((l,i) => {
+            return `<option value='${i}' ${(i == last_list) ? 'selected' : ''}>${l.name}</option>`
+        }).join('');
     }
 
     inputAddClick(e) {
@@ -234,10 +265,8 @@ class GroceryList {
         value = value.trim();
         if (value == '')
             return;
-        const last_list = this.data.last_list;
-        var list = this.data.lists[last_list];
-        this.data.lists[last_list].entries.push({
-            'id': list.next_id++,
+        const list = this.listGet();
+        list.entries.push({
             'value': value,
             'checked': false
         });
@@ -246,16 +275,17 @@ class GroceryList {
     }
 
     entryChanged(e) {
-        const last_list = this.data.last_list;
-        this.data.lists[last_list].entries[e.target.dataset.id].checked = !!e.target.checked;
+        const list = this.listGet();
+        const i = e.target.dataset.id;
+        list.entries[i].checked = !!e.target.checked;
+        this.save();
     }
 
     renderEntries() {
-        const last_list = this.data.last_list;
-        var entries = this.data.lists[last_list].entries.map((e) => {
-            return `<li class="entry"><label><input type="checkbox" data-id="${e.id}" ${e.checked ? 'checked' : ''}>${e.value}</label> </li>`;
-        });
-        document.getElementById('entries').innerHTML = entries?.join('\n') || 'This list is empty';
+        const list = this.listGet();
+        document.getElementById('entries').innerHTML = list?.entries?.map((e, i) => {
+            return `<li class="entry"><label><input type="checkbox" data-id="${i}" ${e.checked ? 'checked' : ''}>${e.value}</label> </li>`;
+        })?.join('') || 'This list is empty';
         
         for (let o of document.getElementsByClassName('entry')) {
             o.addEventListener('change', (e) => this.entryChanged(e));

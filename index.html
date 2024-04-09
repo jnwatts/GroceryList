@@ -12,64 +12,27 @@
         });
     });
     </script>
-    <style>
-        body {
-            font-family: "Gill Sans", sans-serif;
-        }
-
-        #lists {
-            font-size: 1.5em;
-        }
-
-        button, input {
-            font-size: 1.2em;
-        }
-
-        #entries {
-            list-style-type: none;
-            padding-inline-start: 0;
-        }
-
-        .entry {
-            font-size: 1.2em;
-            margin-top: 0.5em;
-            margin-bottom: 0.5em;
-        }
-
-        .entry input[type="checkbox"] {
-            /* Double-sized Checkboxes */
-            -ms-transform: scale(1.2); /* IE */
-            -moz-transform: scale(1.2); /* FF */
-            -webkit-transform: scale(1.2); /* Safari and Chrome */
-            -o-transform: scale(1.2); /* Opera */
-            transform: scale(1.2);
-            margin-right: 0.5em;
-        }
-
-        #popup {
-            position: absolute;
-            top: 5em;
-            left: 5em;
-            background: white;
-            border: 2px solid black;
-            padding: 1em;
-        }
-    </style>
+    <link rel="stylesheet" href="index.css" />
 </head>
 <body>
 <p>
+    <label><input id="light-mode" type="checkbox">Light mode</label>
+    <button id="nuke">Nuke</button>
+</p>
+
+<p>
     <select id="lists">
-    </select>
+    </select><br>
     <button id="lists-new">New</button>
     <button id="lists-rename">Rename</button>
-    <button id="lists-delete">Delete</button>
+    <button id="lists-delete">Delete</button><br>
+    <button id="lists-export">Export</button>
+    <button id="lists-import">Import</button>
 </p>
 
 <p>
     <button id="lists-checkout">Checkout</button>
     <button id="lists-clear">Clear</button>
-    <button id="lists-export">Export</button>
-    <button id="lists-import">Import</button>
 </p>
 
 <p id="p-input">

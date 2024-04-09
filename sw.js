@@ -1,7 +1,8 @@
-const cacheKey = 'GroceryList-v1';
+const cacheKey = 'GroceryList-v2';
 const cacheKeyAllowList = [cacheKey];
 const cacheUrls = [
     '/index.html',
+    '/index.css',
     '/manifest.json',
     '/favicon.ico',
     '/grocerylist.js',

@@ -61,7 +61,12 @@ class GroceryList {
         var old_v = ('v' in this.data ? this.data.v : 1);
         var new_v = 1;
 
-// this.data = this.defaultData();
+        if (old_v == 1) {
+            if (this.data.lists == undefined) {
+                this.data = this.defaultData();
+                old_v = undefined;
+            }
+        }
 
         if (old_v != new_v) {
             this.save();

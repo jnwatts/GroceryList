@@ -25,6 +25,7 @@ class GroceryList {
         document.getElementById('lists-new').addEventListener('click', (e) => this.listNew(e));
         document.getElementById('lists-rename').addEventListener('click', (e) => this.listRename(e));
         document.getElementById('lists-delete').addEventListener('click', (e) => this.listDelete(e));
+        document.getElementById('lists-expand').addEventListener('click', (e) => this.listPanelExpand(e));
 
         document.getElementById('input-add').addEventListener('click', (e) => this.inputAddClick(e));
         document.getElementById('input').addEventListener('keyup', (e) => this.inputKeyup(e));
@@ -233,6 +234,15 @@ class GroceryList {
         });
     }
 
+    listPanelExpand(e) {
+        const el = document.getElementById('lists-panel'),
+              ch = el.clientHeight,
+              sh = el.scrollHeight,
+              isCollapsed = !ch,
+              noHeightSet = !el.style.height;
+        el.style.height = el.style.height = (isCollapsed || noHeightSet ? sh : 0) + "px";
+    }
+
     renderLists() {
         const last_list = this.data.last_list;
         document.getElementById('lists').innerHTML = this.data.lists.map((l,i) => {
@@ -285,7 +295,7 @@ class GroceryList {
         const list = this.listGet();
         document.getElementById('entries').innerHTML = list?.entries?.map((e, i) => {
             return `<li class="entry"><label><input type="checkbox" data-id="${i}" ${e.checked ? 'checked' : ''}>${e.value}</label> </li>`;
-        })?.join('') || 'This list is empty';
+        })?.join('') || `<span id="list-empty">This list is empty</span>`;
         
         for (let o of document.getElementsByClassName('entry')) {
             o.addEventListener('change', (e) => this.entryChanged(e));

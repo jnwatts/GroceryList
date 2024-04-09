@@ -35,12 +35,12 @@ input[type="checkmark"] {
     background-color: black;
 }
 
-#lists {
-    font-size: 1.5em;
+#lists, button, input {
+    font-size: 1.2em;
 }
 
-button, input {
-    font-size: 1.2em;
+#list-empty {
+    font-style: italic;
 }
 
 #entries {
@@ -69,4 +69,11 @@ button, input {
     background: var(--bg-color);
     border: 3px solid var(--font-color);
     padding: 1em;
+}
+
+#lists-panel {
+    transition-property: height;
+    transition-duration: 0.5s;
+    overflow-y: hidden;
+    height: 0px;
 }

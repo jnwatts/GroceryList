@@ -225,6 +225,9 @@ class GroceryList {
         if (this.data.lists.length <= 1) {
             return;
         }
+        if (this.data.last_list >= this.data.lists.length) {
+            return;
+        }
         delete this.data.lists[this.data.last_list];
         this.renderLists();
         this.listSet(0);
@@ -247,6 +250,7 @@ class GroceryList {
     renderLists() {
         const last_list = this.data.last_list;
         document.getElementById('lists').innerHTML = this.data.lists.map((l,i) => {
+            if (!l) { return null; }
             return `<option value='${i}' ${(i == last_list) ? 'selected' : ''}>${l.name}</option>`
         }).join('');
     }

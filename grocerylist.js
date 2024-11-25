@@ -232,11 +232,7 @@ class GroceryList {
     }
 
     listDeleteByName(name) {
-        this.data.lists.map((l,i) => {
-            if (l.name == name) {
-                delete this.data.lists[i];
-            }
-        });
+        this.data.lists.filter((l) => l.name == name);
     }
 
     listPanelExpand(e) {

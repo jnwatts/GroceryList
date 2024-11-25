@@ -1,3 +1,7 @@
+# NO LONGER MAINTAINED
+
+Really it never was ;-) Regardless: I've decided to replace this with an HTML/JS application instead of Android/Java.
+
 # GroceryList
 A very simple grocery and/or scratch list app for Android.
 
